@@ -1,6 +1,6 @@
-import time
 import streamlit as st
-import requests, json
+
+from api import login
 
 st.markdown(
     """
@@ -8,27 +8,12 @@ st.markdown(
 """
 )
 
-BASE_URL = "http://14.56.184.4:8000/"
 
-
-def login(username, password):
-    if not username:
-        st.error("아이디를 입력하세요.")
-        return
-    if not password:
-        st.error("비밀번호를 입력하세요.")
-        return
-
-    response = requests.post(
-        f"{BASE_URL}api/v1/users/login/",
-        data={"username": username, "password": password},
-    )
-    if response.status_code == 200:
-        st.success(response.json())
-        time.sleep(1)
-        st.switch_page("pages/Chat.py")
-    else:
-        st.error("로그인 실패. 아이디 혹은 비밀번호를 재확인해주세요.")
+access_token = st.session_state.get("access")
+refresh_token = st.session_state.get("refresh")
+if access_token:
+    # 만약 액세스 토큰 있으면 채팅 페이지로 이동
+    st.switch_page("pages/Chat.py")
 
 
 with st.form("login_form"):
