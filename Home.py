@@ -9,7 +9,8 @@ pages = {
     "계정": [
         st.Page("pages/Login.py", title="로그인"),
         st.Page("pages/Join.py", title="회원가입"),
-    ]
+    ],
+    "채팅": [st.Page("pages/Chat.py", title="채팅")],
 }
 
 pg = st.navigation(pages)
