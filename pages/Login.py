@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 import requests, json
 
@@ -23,9 +24,11 @@ def login(username, password):
         data={"username": username, "password": password},
     )
     if response.status_code == 200:
+        st.success(response.json())
+        time.sleep(1)
         st.switch_page("pages/Chat.py")
     else:
-        st.error(response.status_code)
+        st.error("로그인 실패. 아이디 혹은 비밀번호를 재확인해주세요.")
 
 
 with st.form("login_form"):

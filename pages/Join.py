@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 import requests
 
@@ -32,21 +33,28 @@ def join(username, email, password, password_check):
         data={"username": username, "password": password, "email": email},
     )
     if response.status_code == 201:
+        st.success("회원 가입 성공! 로그인 화면으로 이동합니다.")
+        time.sleep(1)
         st.switch_page("pages/Login.py")
     else:
-        st.error(response.status_code)
+        st.error("회원 가입에 실패했습니다. 다시 시도해주세요.")
 
 
 with st.form("join_form", enter_to_submit=False):
-    username = st.text_input(
-        "아이디",
-        placeholder="아이디를 입력하세요",
-        max_chars=20,
-        help="아이디",
-    )
-    username_checked = st.form_submit_button(
-        "중복 확인",
-    )
+
+    username_col1, username_col2 = st.columns(2, vertical_alignment="bottom")
+
+    with username_col1:
+        username = st.text_input(
+            "아이디",
+            placeholder="아이디를 입력하세요",
+            max_chars=20,
+            help="아이디",
+        )
+    with username_col2:
+        username_checked = st.form_submit_button(
+            "중복 확인",
+        )
     # if username_checked:
     #     # 중복 확인
     #     response = requests.get(f"http://14.56.184.4:8000/api/v1/users/")
