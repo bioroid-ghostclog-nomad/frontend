@@ -2,7 +2,7 @@ import streamlit as st
 import jwt, os
 from dotenv import load_dotenv
 
-from api import get_my_info, put_my_info
+from api import change_password, check_password, get_my_info, put_my_info
 
 
 st.markdown(
@@ -19,6 +19,11 @@ refresh_token = st.session_state.get("refresh")
 if not access_token:
     # 만약 액세스 토큰 없으면 로그인 페이지로 이동
     st.switch_page("pages/Login.py")
+
+pwd_checked = st.session_state.get("pwd_checked")
+if not pwd_checked:
+    # 만약 비밀번호 확인 하지 않으면 비밀번호 확인 페이지로
+    st.switch_page("pages/PasswordCheck.py")
 
 token = jwt.decode(
     access_token,
@@ -54,5 +59,33 @@ with st.form("myinfo_form", enter_to_submit=False):
         "수정하기",
     )
     if submitted:
-        updated_data, updated_status_code = put_my_info(email)
-        print(updated_status_code)
+        put_my_info(email)
+
+with st.form("password_form", enter_to_submit=False):
+
+    old_password = st.text_input(
+        "현재 비밀번호",
+        placeholder="현재 비밀번호를 입력하세요",
+        max_chars=20,
+        help="현재 비밀번호",
+        type="password",
+    )
+    new_password = st.text_input(
+        "새 비밀번호",
+        placeholder="새 비밀번호를 입력하세요",
+        max_chars=20,
+        help="새 비밀번호",
+        type="password",
+    )
+    new_password_check = st.text_input(
+        "새 비밀번호 확인",
+        placeholder="다시 새 비밀번호를 입력하세요",
+        max_chars=20,
+        type="password",
+        help="새 비밀번호를 다시 확인합니다.",
+    )
+    password_submitted = st.form_submit_button(
+        "수정하기",
+    )
+    if password_submitted:
+        change_password(old_password, new_password, new_password_check)
