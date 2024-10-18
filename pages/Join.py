@@ -1,6 +1,6 @@
 import streamlit as st
 
-from api import check_username, join
+from api import check_username, join, check_email
 
 st.markdown(
     """
@@ -19,7 +19,9 @@ with st.form("join_form", enter_to_submit=False):
 
     # 아이디
     username_col1, username_col2 = st.columns(2, vertical_alignment="bottom")
-    is_username_valid = st.session_state.get("is_username_valid", False)
+    is_username_valid = st.session_state.get("is_username_valid", False) # 아이디 중복 확인 여부
+    email_flag = st.session_state.get("email_flag", False) # 이메일 보낸 여부
+    email_chk = st.session_state.get("email_chk", False) # 이메일 코드 인증 여부
     with username_col1:
         username = st.text_input(
             "아이디",
@@ -34,7 +36,6 @@ with st.form("join_form", enter_to_submit=False):
     if username_checked:
         # 중복 확인
         st.session_state["is_username_valid"] = check_username(username)
-
     # 이메일
     email = st.text_input(
         "이메일",
@@ -42,6 +43,25 @@ with st.form("join_form", enter_to_submit=False):
         max_chars=50,
         help="이메일",
     )
+    # 인증 이메일 보내기
+    if st.form_submit_button("인증 코드 보내기") and email:
+        st.success(check_email(email,email_flag))
+        st.session_state["email_flag"] = True
+    # 이메일 보낸 후, 검증 받기
+    if email_flag:
+        code = st.text_input(
+            "인증 코드",
+            max_chars=6,
+            )
+        if st.form_submit_button("인증 코드 검사"):
+            result = check_email(email,email_flag,code=code)
+            if result:
+                st.success("이메일 인증 성공!")
+                st.session_state["email_chk"] = True
+            else:
+                st.warning("이메일 인증 실패! 코드를 재확인해주세요.")
+            
+
 
     # 비밀번호
     password = st.text_input(
@@ -62,4 +82,4 @@ with st.form("join_form", enter_to_submit=False):
         "회원가입",
     )
     if submitted:
-        join(username, email, password, password_check, is_username_valid)
+        join(username, email, password, password_check, is_username_valid,email_chk)

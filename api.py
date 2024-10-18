@@ -74,6 +74,26 @@ def check_username(username):
         st.error(response.json()["response"], icon="❌")
     return is_username_valid
 
+def check_email(email,flag,code=""):
+    if flag: # 인증코드 검사
+        response = requests.delete(
+            f"{BASE_URL}api/v1/users/email/",
+            data={
+                "email": email,
+                "code": code
+                },
+        )
+        return response.json()["response"]
+    else: # 인증 코드 보내기
+        response = requests.post(
+            f"{BASE_URL}api/v1/users/email/",
+            data={"email": email},
+        )
+        response_data = response.json()["response"]
+        if response_data == "success":
+            return True
+        elif response_data == "fail":
+            return False
 
 def get_my_info():
     response = requests.get(
