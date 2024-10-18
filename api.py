@@ -76,6 +76,26 @@ def check_username(username):
     return is_username_valid
 
 
-def get_user_info(user_id):
-    response = requests.get(f"{BASE_URL}api/v1/users/{user_id}")
+def get_my_info():
+    response = requests.get(
+        f"{BASE_URL}api/v1/users/me",
+        data={
+            "access": st.session_state.get("access"),
+            "refresh": st.session_state.get("refresh"),
+        },
+        headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
+    )
+    return response.json(), response.status_code
+
+
+def put_my_info(email):
+    response = requests.put(
+        f"{BASE_URL}api/v1/users/me",
+        data={
+            "access": st.session_state.get("access"),
+            "refresh": st.session_state.get("refresh"),
+            "email": email,
+        },
+        headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
+    )
     return response.json(), response.status_code

@@ -2,7 +2,7 @@ import streamlit as st
 import jwt, os
 from dotenv import load_dotenv
 
-from api import get_user_info
+from api import get_my_info, put_my_info
 
 
 st.markdown(
@@ -10,9 +10,6 @@ st.markdown(
 # 내 정보
 """
 )
-
-# BASE_URL = "http://14.56.184.4:8000/"
-BASE_URL = "http://localhost:8000/"
 
 load_dotenv()
 
@@ -28,11 +25,12 @@ token = jwt.decode(
     key=os.getenv("SECRET_KEY"),
     algorithms=["HS256"],
 )
-user_id = token["user_id"]
-data, status_code = get_user_info(user_id)
+data, status_code = get_my_info()
 
 if status_code != 200:
     st.error("유저를 찾을 수 없습니다.")
+    del st.session_state["access"]
+    del st.session_state["refresh"]
     st.switch_page("pages/Login.py")
 
 with st.form("myinfo_form", enter_to_submit=False):
@@ -52,20 +50,9 @@ with st.form("myinfo_form", enter_to_submit=False):
         max_chars=50,
         help="이메일",
     )
-    password = st.text_input(
-        "비밀번호",
-        placeholder="비밀번호를 입력하세요",
-        max_chars=20,
-        type="password",
-        help="비밀번호",
-    )
-    password_check = st.text_input(
-        "비밀번호 확인",
-        placeholder="다시 비밀번호를 입력하세요",
-        max_chars=20,
-        type="password",
-        help="비밀번호를 다시 확인합니다.",
-    )
     submitted = st.form_submit_button(
         "수정하기",
     )
+    if submitted:
+        updated_data, updated_status_code = put_my_info(email)
+        print(updated_status_code)
