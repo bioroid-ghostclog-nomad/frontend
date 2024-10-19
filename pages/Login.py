@@ -11,12 +11,14 @@ st.markdown(
 access_token = st.session_state.get("access")
 refresh_token = st.session_state.get("refresh")
 if access_token:
-    # 만약 액세스 토큰 있으면 채팅 페이지로 이동
-    st.switch_page("pages/Chat.py")
+    # 만약 액세스 토큰 있으면 대화 생성 페이지로 이동
+    st.switch_page("pages/CreateConversation.py")
 
 if "pwd_checked" in st.session_state:
+    # 로그인도 안 되어 있으면 비밀번호 체크도 당연히 안 되어 있음
     del st.session_state["pwd_checked"]
 
+# 로그인 form
 with st.form("login_form"):
     username = st.text_input(
         "아이디",

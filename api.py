@@ -2,8 +2,8 @@ import streamlit as st
 import requests
 import time
 
-BASE_URL = "http://14.56.184.4:8000/"
-# BASE_URL = "http://localhost:8000/"
+# BASE_URL = "http://14.56.184.4:8000/"
+BASE_URL = "http://localhost:8000/"
 
 
 def join(username, email, password, password_check, is_username_valid, email_chk):
@@ -58,7 +58,7 @@ def login(username, password):
         time.sleep(1)
         st.session_state["access"] = response.json()["access"]
         st.session_state["refresh"] = response.json()["refresh"]
-        st.switch_page("pages/Chat.py")
+        st.switch_page("pages/CreateConversation.py")
     else:
         st.error("로그인 실패. 아이디 혹은 비밀번호를 재확인해주세요.")
 
@@ -77,17 +77,15 @@ def check_username(username):
         st.error(response.json()["response"], icon="❌")
     return is_username_valid
 
-def check_email(email,flag,code=""):
-    if flag: # 인증코드 검사
+
+def check_email(email, flag, code=""):
+    if flag:  # 인증코드 검사
         response = requests.delete(
             f"{BASE_URL}api/v1/users/email/",
-            data={
-                "email": email,
-                "code": code
-                },
+            data={"email": email, "code": code},
         )
         return response.json()["response"]
-    else: # 인증 코드 보내기
+    else:  # 인증 코드 보내기
         response = requests.post(
             f"{BASE_URL}api/v1/users/email/",
             data={"email": email},
@@ -97,6 +95,7 @@ def check_email(email,flag,code=""):
             return True
         elif response_data == "fail":
             return False
+
 
 def get_my_info():
     response = requests.get(
@@ -181,6 +180,7 @@ def change_password(old_password, new_password, new_password_check):
     else:
         st.error("알 수 없는 에러")
 
+
 def regist_api_key(api_key):
     response = requests.get(
         f"{BASE_URL}api/v1/users/me",
@@ -192,3 +192,30 @@ def regist_api_key(api_key):
         headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
     )
     return response.json(), response.status_code
+
+
+def embed_pdf(pdf):
+    # langchain 임베딩하기
+    pass
+
+
+def create_conversation(title, pdf):
+    if not title:
+        st.error("제목을 입력하세요.")
+        return
+    if not pdf:
+        st.error("PDF 파일을 업로드하세요.")
+        return
+
+    response = requests.post(
+        f"{BASE_URL}api/v1/",
+        data={
+            "access": st.session_state.get("access"),
+            "refresh": st.session_state.get("refresh"),
+            "title": title,
+        },
+        files={"file": pdf},
+    )
+
+    embed_pdf(pdf)  # PDF 파일 임베드하기
+    return
