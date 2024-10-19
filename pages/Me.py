@@ -2,7 +2,13 @@ import streamlit as st
 import jwt, os
 from dotenv import load_dotenv
 
-from api import change_password, check_password, get_my_info, put_my_info
+from api import (
+    change_password,
+    check_password,
+    get_my_info, 
+    put_my_info,
+    regist_api_key
+)
 
 
 st.markdown(
@@ -89,3 +95,20 @@ with st.form("password_form", enter_to_submit=False):
     )
     if password_submitted:
         change_password(old_password, new_password, new_password_check)
+
+with st.form("regist_api_key", enter_to_submit=False):
+
+    api_key = st.text_input(
+        "API key",
+        placeholder="api를 입력해주세요.",
+        help="API key",
+    )
+    submitted = st.form_submit_button(
+        "변경하기",
+    )
+    if submitted:
+        response,status = regist_api_key(api_key)
+    if(status == "success"):
+        st.success(response)
+    elif(status == "fail"):
+        st.warning(response)    

@@ -180,3 +180,15 @@ def change_password(old_password, new_password, new_password_check):
         st.error("현재 비밀번호 또는 새 비밀번호를 확인해주세요.")
     else:
         st.error("알 수 없는 에러")
+
+def regist_api_key(api_key):
+    response = requests.get(
+        f"{BASE_URL}api/v1/users/me",
+        data={
+            "access": st.session_state.get("access"),
+            "refresh": st.session_state.get("refresh"),
+            "api_key": api_key,
+        },
+        headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
+    )
+    return response.json(), response.status_code
