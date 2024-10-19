@@ -82,4 +82,4 @@ with st.form("join_form", enter_to_submit=False):
         "회원가입",
     )
     if submitted:
-        join(username, email, password, password_check, is_username_valid,email_chk)
+        join(username, email, password, password_check, is_username_valid, email_chk)

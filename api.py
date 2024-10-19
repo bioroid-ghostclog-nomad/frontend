@@ -2,11 +2,11 @@ import streamlit as st
 import requests
 import time
 
-# BASE_URL = "http://14.56.184.4:8000/"
-BASE_URL = "http://localhost:8000/"
+BASE_URL = "http://14.56.184.4:8000/"
+# BASE_URL = "http://localhost:8000/"
 
 
-def join(username, email, password, password_check, is_username_valid):
+def join(username, email, password, password_check, is_username_valid, email_chk):
     if not username:
         st.error("아이디를 입력하세요.")
         return
@@ -15,6 +15,9 @@ def join(username, email, password, password_check, is_username_valid):
         return
     if not email:
         st.error("이메일을 입력하세요.")
+        return
+    if not email_chk:
+        st.error("이메일 인증을 진행해주세요.")
         return
     if not password:
         st.error("비밀번호를 입력하세요.")
