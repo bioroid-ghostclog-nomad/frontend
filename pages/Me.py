@@ -106,9 +106,10 @@ with st.form("regist_api_key", enter_to_submit=False):
     submitted = st.form_submit_button(
         "변경하기",
     )
-    if submitted:
-        response,status = regist_api_key(api_key)
-    if(status == "success"):
-        st.success(response)
-    elif(status == "fail"):
-        st.warning(response)    
+    if api_key:
+        if submitted:
+            response,status = regist_api_key(api_key)
+        if(status == 201):
+            st.success(response["response"])
+        elif(status == 400):
+            st.warning(response["response"])    

@@ -30,7 +30,7 @@ def join(username, email, password, password_check, is_username_valid, email_chk
         return
 
     response = requests.post(
-        f"{BASE_URL}api/v1/users/userdata/",
+        f"{BASE_URL}api/v1/users/userdata",
         data={"username": username, "password": password, "email": email},
     )
     if response.status_code == 201:
@@ -50,7 +50,7 @@ def login(username, password):
         return
 
     response = requests.post(
-        f"{BASE_URL}api/v1/users/login/",
+        f"{BASE_URL}api/v1/users/login",
         data={"username": username, "password": password},
     )
     if response.status_code == 200:
@@ -66,7 +66,7 @@ def login(username, password):
 def check_username(username):
 
     response = requests.post(
-        f"{BASE_URL}api/v1/users/Idchk/",
+        f"{BASE_URL}api/v1/users/Idchk",
         data={"username": username},
     )
     if response.json()["response"] != "중복 아이디입니다.":
@@ -81,13 +81,13 @@ def check_username(username):
 def check_email(email, flag, code=""):
     if flag:  # 인증코드 검사
         response = requests.delete(
-            f"{BASE_URL}api/v1/users/email/",
+            f"{BASE_URL}api/v1/users/email",
             data={"email": email, "code": code},
         )
         return response.json()["response"]
     else:  # 인증 코드 보내기
         response = requests.post(
-            f"{BASE_URL}api/v1/users/email/",
+            f"{BASE_URL}api/v1/users/email",
             data={"email": email},
         )
         response_data = response.json()["response"]
@@ -182,8 +182,8 @@ def change_password(old_password, new_password, new_password_check):
 
 
 def regist_api_key(api_key):
-    response = requests.get(
-        f"{BASE_URL}api/v1/users/me",
+    response = requests.post(
+        f"{BASE_URL}api/v1/users/apikey",
         data={
             "access": st.session_state.get("access"),
             "refresh": st.session_state.get("refresh"),
@@ -192,6 +192,23 @@ def regist_api_key(api_key):
         headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
     )
     return response.json(), response.status_code
+
+def check_api():
+    response = requests.get(
+        f"{BASE_URL}api/v1/users/apikey",
+        data={
+            "access": st.session_state.get("access"),
+            "refresh": st.session_state.get("refresh"),
+        },
+        headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
+    )
+
+    result = response.json()["response"]
+    if result == "success":
+        return
+    elif result == "fail":
+        return st.switch_page("pages/Me.py")
+
 
 
 def embed_pdf(pdf):

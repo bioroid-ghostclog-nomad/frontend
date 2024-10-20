@@ -1,10 +1,12 @@
 import streamlit as st
-
+from api import check_api
 st.markdown(
     """
 # 대화 생성하기
 """
 )
+
+check_api()
 
 access_token = st.session_state.get("access")
 refresh_token = st.session_state.get("refresh")
