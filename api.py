@@ -235,4 +235,7 @@ def create_conversation(title, pdf, model):
         st.warning("에러가 발생했습니다.")
     elif result == "success":
         st.warning("PDF 분석 완료. 챗봇을 생성합니다.")
+        time.sleep(1)
+        st.session_state.get("conversation_id") = response.json()["pk"]
+        st.switch_page("pages/Conversation.py")
     return
