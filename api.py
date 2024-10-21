@@ -209,14 +209,7 @@ def check_api():
     elif result == "fail":
         return st.switch_page("pages/Me.py")
 
-
-
-def embed_pdf(pdf):
-    # langchain 임베딩하기
-    pass
-
-
-def create_conversation(title, pdf):
+def create_conversation(title,pdf,model):
     if not title:
         st.error("제목을 입력하세요.")
         return
@@ -225,14 +218,19 @@ def create_conversation(title, pdf):
         return
 
     response = requests.post(
-        f"{BASE_URL}api/v1/",
+        f"{BASE_URL}api/v1/chating/chatingroom",
         data={
             "access": st.session_state.get("access"),
             "refresh": st.session_state.get("refresh"),
             "title": title,
+            "model": model,
         },
-        files={"file": pdf},
+        headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
+        files={"pdf": pdf},
     )
-
-    embed_pdf(pdf)  # PDF 파일 임베드하기
+    result = response.json()["response"]
+    if result == "fail":
+        st.warning("에러가 발생했습니다.")
+    elif result == "success":
+        st.warning("PDF 분석 완료. 챗봇을 생성합니다.")
     return

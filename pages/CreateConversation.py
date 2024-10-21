@@ -1,11 +1,11 @@
 import streamlit as st
-from api import check_api
+from api import check_api,create_conversation
 st.markdown(
     """
 # 대화 생성하기
 """
 )
-
+# 계정에 등록된 API키가 없을 경우 마이페이지로 이동
 check_api()
 
 access_token = st.session_state.get("access")
@@ -37,4 +37,4 @@ with st.form("conversation_form"):
         "대화 생성하기",
     )
     if submitted:
-        pass
+        create_conversation(title,pdf,model)
