@@ -193,6 +193,7 @@ def regist_api_key(api_key):
     )
     return response.json(), response.status_code
 
+
 def check_api():
     response = requests.get(
         f"{BASE_URL}api/v1/users/apikey",
@@ -209,7 +210,8 @@ def check_api():
     elif result == "fail":
         return st.switch_page("pages/Me.py")
 
-def create_conversation(title,pdf,model):
+
+def create_conversation(title, pdf, model):
     if not title:
         st.error("제목을 입력하세요.")
         return

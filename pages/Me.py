@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 from api import (
     change_password,
     check_password,
-    get_my_info, 
+    get_my_info,
     put_my_info,
-    regist_api_key
+    regist_api_key,
 )
 
 
@@ -108,8 +108,8 @@ with st.form("regist_api_key", enter_to_submit=False):
     )
     if api_key:
         if submitted:
-            response,status = regist_api_key(api_key)
-        if(status == 201):
+            response, status = regist_api_key(api_key)
+        if status == 201:
             st.success(response["response"])
-        elif(status == 400):
-            st.warning(response["response"])    
+        elif status == 400:
+            st.warning(response["response"])
