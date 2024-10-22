@@ -236,6 +236,32 @@ def create_conversation(title, pdf, model):
     elif result == "success":
         st.warning("PDF 분석 완료. 챗봇을 생성합니다.")
         time.sleep(1)
-        st.session_state.get("conversation_id") = response.json()["pk"]
+        st.session_state["conversation_id"] = response.json()["pk"]
         st.switch_page("pages/Conversation.py")
     return
+
+
+def get_messages(id):
+    response = requests.get(
+        f"{BASE_URL}api/v1/chating/{id}/messages",
+        data={
+            "access": st.session_state.get("access"),
+            "refresh": st.session_state.get("refresh"),
+        },
+        headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
+    )
+    return response.json()
+
+
+def post_message(id, chat):
+    response = requests.post(
+        f"{BASE_URL}api/v1/chating/{id}/messages",
+        data={
+            "access": st.session_state.get("access"),
+            "refresh": st.session_state.get("refresh"),
+            "chat": chat,
+            "speaker": "human",
+        },
+        headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
+    )
+    return response
