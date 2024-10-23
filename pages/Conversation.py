@@ -21,6 +21,9 @@ if not access_token:
 
 conversation_id = st.session_state.get("conversation_id")
 
+if conversation_id is None:
+    st.switch_page("pages/Conversations.py")
+
 st.query_params["conversation_id"] = conversation_id
 
 response = get_messages(conversation_id)

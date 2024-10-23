@@ -20,36 +20,5 @@ pages = {
     ],
 }
 
-
-def set_conversation_id(conversation_id):
-    st.session_state["conversation_id"] = conversation_id
-    st.switch_page("pages/Conversation.py")
-
-
-if "access" in st.session_state:
-    # 로그인 시
-
-    with st.sidebar:
-        new_conversation = st.button("새 대화 생성")
-
-        # 대화 목록
-        conversations = [
-            {"title": "대화 1" * 100, "id": "1"},
-            {"title": "대화 2", "id": "2"},
-            {"title": "대화 3", "id": "3"},
-        ]
-
-        for conversation in conversations:
-            button = st.button(
-                (
-                    conversation["title"]
-                    if len(conversation["title"]) < 20
-                    else conversation["title"][:20] + "..."
-                ),
-                key=conversation["id"],
-            )
-            if button:
-                set_conversation_id(conversation["id"])
-
 pg = st.navigation(pages)
 pg.run()

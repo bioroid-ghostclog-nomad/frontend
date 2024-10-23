@@ -40,8 +40,8 @@ data, status_code = get_my_info()
 
 if status_code != 200:
     st.error("유저를 찾을 수 없습니다.")
-    del st.session_state["access"]
-    del st.session_state["refresh"]
+    del st.session_state.access
+    del st.session_state.refresh
     st.switch_page("pages/Login.py")
 
 with st.form("myinfo_form", enter_to_submit=False):

@@ -56,8 +56,8 @@ def login(username, password):
     if response.status_code == 200:
         st.success("로그인 성공!")
         time.sleep(1)
-        st.session_state["access"] = response.json()["access"]
-        st.session_state["refresh"] = response.json()["refresh"]
+        st.session_state.access = response.json()["access"]
+        st.session_state.refresh = response.json()["refresh"]
         st.switch_page("pages/CreateConversation.py")
     else:
         st.error("로그인 실패. 아이디 혹은 비밀번호를 재확인해주세요.")
@@ -138,7 +138,7 @@ def check_password(password):
         headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
     )
     if response.status_code == 200:
-        st.session_state["pwd_checked"] = True
+        st.session_state.pwd_checked = True
         st.switch_page("pages/Me.py")
     elif response.status_code == 403:
         st.error("비밀번호가 틀렸습니다.")
@@ -236,10 +236,31 @@ def create_conversation(title, pdf, model):
     elif result == "success":
         st.warning("PDF 분석 완료. 챗봇을 생성합니다.")
         time.sleep(1)
-        st.session_state["conversation_id"] = response.json()["pk"]
+        st.session_state.conversation_id = response.json()["pk"]
         st.switch_page("pages/Conversation.py")
     return
 
+def get_conversations():
+    response = requests.get(
+        f"{BASE_URL}api/v1/chating/chatingrooms",
+        data={
+            "access": st.session_state.get("access"),
+            "refresh": st.session_state.get("refresh"),
+        },
+        headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
+    )
+    return response.json()
+
+def delete_conversations():
+    response = requests.delete(
+        f"{BASE_URL}api/v1/chating/chatingrooms",
+        data={
+            "access": st.session_state.get("access"),
+            "refresh": st.session_state.get("refresh"),
+        },
+        headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
+    )
+    return response.json()
 
 def get_messages(id):
     response = requests.get(

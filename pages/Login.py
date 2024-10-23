@@ -16,7 +16,7 @@ if access_token:
 
 if "pwd_checked" in st.session_state:
     # 로그인도 안 되어 있으면 비밀번호 체크도 당연히 안 되어 있음
-    del st.session_state["pwd_checked"]
+    del st.session_state.pwd_checked
 
 # 로그인 form
 with st.form("login_form"):

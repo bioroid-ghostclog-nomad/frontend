@@ -16,7 +16,7 @@ if access_token:
 
 if "pwd_checked" in st.session_state:
     # 로그인도 안 되어 있으면 비밀번호 체크도 당연히 안 되어 있음
-    del st.session_state["pwd_checked"]
+    del st.session_state.pwd_checked
 
 with st.form("join_form", enter_to_submit=False):
 
@@ -40,7 +40,7 @@ with st.form("join_form", enter_to_submit=False):
         )
     if username_checked:
         # 중복 확인
-        st.session_state["is_username_valid"] = check_username(username)
+        st.session_state.is_username_valid = check_username(username)
     # 이메일
     email = st.text_input(
         "이메일",
@@ -51,7 +51,7 @@ with st.form("join_form", enter_to_submit=False):
     # 인증 이메일 보내기
     if st.form_submit_button("인증 코드 보내기") and email:
         st.success(check_email(email, email_flag))
-        st.session_state["email_flag"] = True
+        st.session_state.email_flag = True
     # 이메일 보낸 후, 검증 받기
     if email_flag:
         code = st.text_input(
@@ -62,7 +62,7 @@ with st.form("join_form", enter_to_submit=False):
             result = check_email(email, email_flag, code=code)
             if result:
                 st.success("이메일 인증 성공!")
-                st.session_state["email_chk"] = True
+                st.session_state.email_chk = True
             else:
                 st.warning("이메일 인증 실패! 코드를 재확인해주세요.")
 
