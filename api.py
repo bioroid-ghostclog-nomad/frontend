@@ -240,6 +240,7 @@ def create_conversation(title, pdf, model):
         st.switch_page("pages/Conversation.py")
     return
 
+
 def get_conversations():
     response = requests.get(
         f"{BASE_URL}api/v1/chating/chatingrooms",
@@ -251,6 +252,7 @@ def get_conversations():
     )
     return response.json()
 
+
 def delete_conversations():
     response = requests.delete(
         f"{BASE_URL}api/v1/chating/chatingrooms",
@@ -260,7 +262,11 @@ def delete_conversations():
         },
         headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
     )
-    return response.json()
+    if response.status_code == 204:
+        st.success("대화 삭제에 성공했습니다.")
+    else:
+        st.warning("대화 삭제에 실패했습니다. 다시 시도해주세요.")
+
 
 def get_messages(id):
     response = requests.get(
@@ -286,3 +292,15 @@ def post_message(id, chat):
         headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
     )
     return response
+
+
+def get_stats():
+    response = requests.get(
+        f"{BASE_URL}api/v1/chating/stats",
+        data={
+            "access": st.session_state.get("access"),
+            "refresh": st.session_state.get("refresh"),
+        },
+        headers={"Authorization": f"Bearer {st.session_state.get('access')}"},
+    )
+    return response.json()

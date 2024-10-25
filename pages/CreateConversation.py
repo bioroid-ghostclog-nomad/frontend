@@ -1,5 +1,6 @@
 import streamlit as st
-from api import check_api,create_conversation
+from api import check_api, create_conversation
+
 st.markdown(
     """
 # 대화 생성하기
@@ -23,8 +24,6 @@ with st.form("conversation_form"):
     model = st.selectbox(
         "모델을 선택해 주세요.",
         (
-            "gpt-4",
-            "gpt-4-turbo",
             "gpt-4o",
             "gpt-4o-mini",
         ),
@@ -37,4 +36,4 @@ with st.form("conversation_form"):
         "대화 생성하기",
     )
     if submitted:
-        create_conversation(title,pdf,model)
+        create_conversation(title, pdf, model)
