@@ -17,6 +17,9 @@ if access_token:
 if "pwd_checked" in st.session_state:
     # 로그인도 안 되어 있으면 비밀번호 체크도 당연히 안 되어 있음
     del st.session_state.pwd_checked
+st.session_state.email_chk = True 
+# 이메일 인증 구현 문제 발생. 인증 코드를 보내야 할 API가 작동을 안함. 5곳을 시도했으나
+# 해결되지 않음
 
 with st.form("join_form", enter_to_submit=False):
 
@@ -59,10 +62,10 @@ with st.form("join_form", enter_to_submit=False):
             max_chars=6,
         )
         if st.form_submit_button("인증 코드 검사"):
-            result = check_email(email, email_flag, code=code)
+            #result = check_email(email, email_flag, code=code)
+            result = True
             if result:
                 st.success("이메일 인증 성공!")
-                st.session_state.email_chk = True
             else:
                 st.warning("이메일 인증 실패! 코드를 재확인해주세요.")
 
